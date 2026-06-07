@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Bag | VELMORA Luxury Furniture</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary: #8B5E3C;      /* Deep Wood */
+            --accent: #D4AF37;       /* Soft Gold */
+            --bg: #F9F7F2;           /* Warm Beige */
+            --white: #FFFFFF;
+            --text: #1A1A1A;
+            --glass: rgba(255, 255, 255, 0.8);
+            --border: rgba(0, 0, 0, 0.05);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* --- Header --- */
+        header {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 22px; font-weight: 700; color: var(--primary); letter-spacing: 5px; text-decoration: none; text-transform: uppercase; }
+        .status-pill { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 600; border: 1px solid var(--accent); padding: 4px 12px; border-radius: 20px; }
+
+        /* --- Layout --- */
+        .main-container { max-width: 1300px; margin: 40px auto; padding: 0 5%; display: grid; grid-template-columns: 1.8fr 1fr; gap: 50px; }
+
+        /* --- Cart Section --- */
+        .cart-section h1 { font-size: 32px; font-weight: 300; margin-bottom: 30px; letter-spacing: -1px; }
+
+        .cart-item {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 25px;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            transition: var(--transition);
+            animation: slideUp 0.6s ease forwards;
+        }
+        .cart-item:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.06); }
+        
+        .item-img { width: 120px; height: 120px; background: #f5f5f5; border-radius: 12px; overflow: hidden; }
+        .item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .item-details h3 { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+        .item-details p { color: #888; font-size: 14px; margin-bottom: 15px; }
+
+        /* Quantity Controls */
+        .qty-control { display: flex; align-items: center; gap: 15px; background: var(--bg); width: fit-content; padding: 5px 12px; border-radius: 30px; }
+        .qty-btn { background: none; border: none; cursor: pointer; color: var(--primary); display: flex; align-items: center; }
+        .qty-val { font-weight: 600; font-size: 14px; min-width: 20px; text-align: center; }
+
+        .item-actions { text-align: right; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .item-price { font-size: 18px; font-weight: 700; color: var(--primary); }
+        .remove-btn { color: #E74C3C; cursor: pointer; border: none; background: none; transition: 0.3s; margin-top: auto; }
+        .remove-btn:hover { opacity: 0.6; transform: scale(1.1); }
+
+        /* --- Order Summary --- */
+        .summary-card {
+            background: var(--white);
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 110px;
+            height: fit-content;
+        }
+        .summary-card h2 { font-size: 20px; margin-bottom: 25px; font-weight: 600; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 18px; font-size: 15px; color: #666; }
+        .total-row { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; color: var(--text); font-weight: 700; font-size: 22px; }
+        .total-row span:last-child { color: var(--accent); }
+
+        .whatsapp-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .whatsapp-btn:hover { background: #25D366; transform: scale(1.02); box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
+        
+        /* --- Login Modal (Glass UI) --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+        .login-card {
+            background: var(--glass);
+            padding: 40px;
+            border-radius: 24px;
+            width: 400px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .login-card h2 { margin-bottom: 10px; color: var(--primary); letter-spacing: 2px; }
+        .login-card input {
+            width: 100%; padding: 15px; margin: 20px 0;
+            background: rgba(255,255,255,0.5);
+            border: 1px solid var(--border); border-radius: 12px; outline: none;
+            transition: 0.3s;
+        }
+        .login-card input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
+        .login-submit { width: 100%; background: var(--text); color: white; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .login-submit:hover { background: var(--primary); }
+
+        /* --- Empty Cart State --- */
+        .empty-state { text-align: center; padding: 100px 0; display: none; grid-column: span 2; }
+        .empty-state i { color: #ddd; font-size: 80px; margin-bottom: 20px; display: block; }
+        .shop-now { display: inline-block; margin-top: 20px; padding: 12px 30px; background: var(--primary); color: white; text-decoration: none; border-radius: 30px; }
+
+        /* --- Animations --- */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* --- Responsive --- */
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .summary-card { position: fixed; bottom: 0; left: 0; width: 100%; border-radius: 24px 24px 0 0; z-index: 99; top: auto; padding: 20px; }
+            .cart-section { margin-bottom: 300px; }
+            header { padding: 15px 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">VELMORA</a>
+        <div id="auth-status" class="status-pill">Guest Mode</div>
+    </header>
+
+    <div class="main-container">
+        <div class="cart-section">
+            <h1>Your Shopping Bag</h1>
+            <div id="cart-items-wrapper">
+                <div id="loader" style="opacity: 0.5;">
+                    <div class="cart-item" style="background: #eee; height: 160px; border: none;"></div>
+                </div>
+            </div>
+
+            <div id="empty-cart" class="empty-state">
+                <i data-lucide="shopping-cart"></i>
+                <h2>Your bag is currently empty</h2>
+                <p>Add some luxury pieces to your home sanctuary.</p>
+                <a href="index.html" class="shop-now">Browse Collection</a>
+            </div>
+        </div>
+
+        <div class="summary-card" id="summary-panel">
+            <h2>Order Summary</h2>
+            <div class="row">
+                <span>Subtotal</span>
+                <span>₹<span id="subtotal">0</span></span>
+            </div>
+            <div class="row">
+                <span>Delivery Fee</span>
+                <span style="color: #25D366;">FREE</span>
+            </div>
+            <div class="total-row row">
+                <span>Grand Total</span>
+                <span>₹<span id="final-total">0</span></span>
+            </div>
+            
+            <button class="whatsapp-btn" onclick="processOrder()">
+                <i data-lucide="message-circle"></i>
+                Order via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="login-card">
+            <h2>SIGN IN</h2>
+            <p style="font-size: 13px; color: #888;">Unlock your luxury experience</p>
+            <input type="email" id="userEmail" placeholder="Email Address">
+            <button class="login-submit" onclick="doLogin()">CONTINUE</button>
+            <p style="margin-top: 20px; font-size: 12px; color: #999;">Don't have an account? <a href="signup.html" style="color: var(--accent); text-decoration: none;">Signup</a></p>
+            <span onclick="closeLogin()" style="cursor: pointer; display: block; margin-top: 15px; font-size: 12px; color: #ccc;">Close</span>
+        </div>
+    </div>
+
+    <script>
+        // --- ⚙️ CART SYSTEM (CORE LOGIC) ---
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        function renderCart() {
+            const wrapper = document.getElementById("cart-items-wrapper");
+            const emptyState = document.getElementById("empty-cart");
+            const summaryPanel = document.getElementById("summary-panel");
+            const loader = document.getElementById("loader");
+
+            // Hide loader after a tiny delay for "premium feel"
+            setTimeout(() => { if(loader) loader.style.display = "none"; }, 500);
+
+            wrapper.innerHTML = "";
+            let total = 0;
+
+            if (cart.length === 0) {
+                emptyState.style.display = "block";
+                summaryPanel.style.display = "none";
+                return;
+            }
+
+            emptyState.style.display = "none";
+            summaryPanel.style.display = "block";
+
+            cart.forEach((item, index) => {
+                const itemQty = item.qty || 1;
+                const itemTotal = item.price * itemQty;
+                total += itemTotal;
+
+                wrapper.innerHTML += `
+                    <div class="cart-item" style="animation-delay: ${index * 0.1}s">
+                        <div class="item-img">
+                            <img src="${item.img || 'https://via.placeholder.com/150'}" alt="${item.name}">
+                        </div>
+                        <div class="item-details">
+                            <h3>${item.name}</h3>
+                            <p>Luxury Series</p>
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="updateQty(${index}, -1)"><i data-lucide="minus" size="14"></i></button>
+                                <span class="qty-val">${itemQty}</span>
+                                <button class="qty-btn" onclick="updateQty(${index}, 1)"><i data-lucide="plus" size="14"></i></button>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <span class="item-price">₹${itemTotal.toLocaleString()}</span>
+                            <button class="remove-btn" onclick="removeItem(${index})">
+                                <i data-lucide="trash-2" size="20"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById("subtotal").innerText = total.toLocaleString();
+            document.getElementById("final-total").innerText = total.toLocaleString();
+            lucide.createIcons(); // Refresh icons
+        }
+
+        function updateQty(index, change) {
+            let newQty = (cart[index].qty || 1) + change;
+            if (newQty < 1) return;
+            cart[index].qty = newQty;
+            saveAndRefresh();
+        }
+
+        function removeItem(index) {
+            const items = document.querySelectorAll('.cart-item');
+            items[index].style.transform = "translateX(100px)";
+            items[index].style.opacity = "0";
+            
+            setTimeout(() => {
+                cart.splice(index, 1);
+                saveAndRefresh();
+            }, 300);
+        }
+
+        function saveAndRefresh() {
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+        }
+
+        // --- 👤 LOGIN SYSTEM ---
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            const statusPill = document.getElementById("auth-status");
+            if (isLoggedIn === "true") {
+                statusPill.innerText = "Verified Member ✓";
+                statusPill.style.color = "#25D366";
+                statusPill.style.borderColor = "#25D366";
+            } else {
+                setTimeout(openLogin, 1500); // Show popup after 1.5s
+            }
+        }
+
+        function openLogin() { document.getElementById("loginModal").style.display = "flex"; }
+        function closeLogin() { document.getElementById("loginModal").style.display = "none"; }
+
+        function doLogin() {
+            const email = document.getElementById("userEmail").value;
+            if (email.includes("@")) {
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("userEmail", email);
+                closeLogin();
+                checkLoginStatus();
+            } else {
+                alert("Please enter a valid luxury membership email.");
+            }
+        }
+
+        // --- 🧾 WHATSAPP ORDER SYSTEM ---
+        function processOrder() {
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            if (isLoggedIn !== "true") {
+                alert("Please sign in to confirm your luxury order.");
+                openLogin();
+                return;
+            }
+
+            let message = "⚜️ *NEW ORDER FROM VELMORA* ⚜️\n\n";
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                const qty = item.qty || 1;
+                const total = item.price * qty;
+                grandTotal += total;
+                message += `${index + 1}. *${item.name}* \n   Qty: ${qty} | Price: ₹${total.toLocaleString()}\n\n`;
+            });
+
+            message += `━━━━━━━━━━━━━━\n`;
+            message += `💰 *GRAND TOTAL: ₹${grandTotal.toLocaleString()}*\n`;
+            message += `━━━━━━━━━━━━━━\n\n`;
+            message += `Customer: ${localStorage.getItem("userEmail")}\n`;
+            message += `Please confirm my order.`;
+
+            const phone = "919332710756";
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            
+            alert("Redirecting to your personal concierge (WhatsApp)...");
+            window.open(url, "_blank");
+            
+            // Optional: Clear cart after order
+            // localStorage.removeItem("cart");
+            // window.location.href = "index.html";
+        }
+
+        // Initialize
+        renderCart();
+        checkLoginStatus();
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofa Chairs Collection | VELMORA Luxury Furniture</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --beige: #F5F5DC;
+            --off-white: #FAF9F6;
+            --wood: #5D4037;
+            --gold: #C5A059;
+            --text-dark: #2C2C2C;
+            --text-light: #707070;
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --glow: 0 0 20px rgba(197, 160, 89, 0.2);
+        }
+
+        body.dark-mode {
+            --white: #121212;
+            --off-white: #1A1A1A;
+            --text-dark: #F5F5F5;
+            --text-light: #B0B0B0;
+            --shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--off-white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        h1, h2, .brand-name {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* --- STICKY HEADER --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--white);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .brand-name {
+            font-size: 2rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover {
+            color: var(--gold);
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--gold);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        .mode-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* --- HERO SLIDER --- */
+        .hero {
+            height: 70vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active { opacity: 1; }
+
+        .slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            padding: 2rem 5% 1rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .breadcrumb a {
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        /* --- PRODUCT GRID --- */
+        .container {
+            padding: 0 5% 5rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--glow);
+        }
+
+        .img-container {
+            height: 350px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .product-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .card-icons {
+            position: absolute;
+            top: 15px;
+            width: 100%;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 5;
+        }
+
+        .product-card:hover .card-icons {
+            opacity: 1;
+        }
+
+        .icon-btn {
+            background: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-dark);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+        .icon-btn.active {
+            color: #e74c3c;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .product-type {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--gold);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--wood);
+        }
+
+        /* --- MODAL POPUP --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 90%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+            animation: zoomIn 0.3s ease;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .modal-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-details {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .btn-add-cart {
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            margin-top: 2rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        .btn-add-cart:hover {
+            background: var(--wood);
+        }
+
+        /* --- FLOATING BUTTONS --- */
+        .float-btns {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .float-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .btn-whatsapp { background: #25D366; }
+        .btn-top { background: var(--gold); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
+            .modal-content { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .product-grid { grid-template-columns: 1fr; }
+            nav { display: none; }
+            .hero-content h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="#" class="brand-name">VELMORA</a>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/Furniture/Sofachair/1.html">1 Seater</a></li>
+                <li><a href="/Furniture/Sofachair/2.html">2 Seater</a></li>
+                <li><a href="/Furniture/3seater.html">3 Seater</a></li>
+            </ul>
+        </nav>
+        <div class="header-icons">
+            <div class="mode-toggle" id="dark-toggle"><i class="fa-solid fa-moon"></i></div>
+            <a href="../../cart.html" class="cart-icon-wrapper">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cart-count">0</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1598300042247-d317fb674c3f?auto=format&fit=crop&q=80&w=1600')">
+            <div class="hero-content"><h1>Elegant Sofa Chairs</h1></div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&q=80&w=1600')">
+            <div class="hero-content"><h1>Timeless Craftsmanship</h1></div>
+        </div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=1600')">
+            <div class="hero-content"><h1>Modern Luxury Living</h1></div>
+        </div>
+    </section>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <a href="#">Home</a> / <a href="#">Furniture</a> / <span>Sofa Chairs</span>
+    </div>
+
+    <!-- PRODUCT LISTING -->
+    <main class="container">
+        <div class="product-grid" id="product-container">
+            <!-- Products injected by JS -->
+        </div>
+    </main>
+
+    <!-- PRODUCT MODAL -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeModal()">&times;</div>
+            <div class="modal-img">
+                <img id="modal-image" src="" alt="">
+            </div>
+            <div class="modal-details">
+                <h2 id="modal-name"></h2>
+                <p id="modal-price" style="font-size: 1.5rem; color: var(--gold); margin: 1rem 0; font-weight: 600;"></p>
+                <p id="modal-desc" style="color: var(--text-light); line-height: 1.6;"></p>
+                <button class="btn-add-cart" id="modal-add-btn">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING BUTTONS -->
+    <div class="float-btns">
+        <a href="https://wa.me/yournumber" class="float-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="#" class="float-btn btn-top"><i class="fa-solid fa-arrow-up"></i></a>
+    </div>
+
+    <script>
+        // PRODUCT DATA
+        const products = [
+            { id: "SC001", name: "Royal Wing Chair", type: "Wing Chair", price: 18500, rating: 5, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=600", desc: "Experience the epitome of luxury with our Royal Wing Chair, featuring premium velvet upholstery and hand-carved mahogany legs." },
+            { id: "SC002", name: "Velvet Lounge Shell", type: "Lounge Chair", price: 22000, rating: 4, image: "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&q=80&w=600", desc: "A modern artistic piece that offers both comfort and a striking visual statement for your living space." },
+            { id: "SC003", name: "Classic Slipper Chair", type: "Slipper Chair", price: 12500, rating: 4, image: "https://images.unsplash.com/photo-1598300042247-d317fb674c3f?auto=format&fit=crop&q=80&w=600", desc: "Sleek and armless, this slipper chair is perfect for cozy corners or as a side accent in minimalist bedrooms." },
+            { id: "SC004", name: "Barrel Oak Swivel", type: "Barrel Chair", price: 15900, rating: 5, image: "https://images.unsplash.com/photo-1519947486511-46149fa0a254?auto=format&fit=crop&q=80&w=600", desc: "Smooth 360-degree rotation combined with a high-density foam cushion for ultimate relaxation." },
+            { id: "SC005", name: "Emerald Wingback", type: "Wing Chair", price: 19000, rating: 5, image: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?auto=format&fit=crop&q=80&w=600", desc: "Deep emerald green fabric with gold-tipped legs, designed for those who appreciate high-end aesthetics." },
+            { id: "SC006", name: "Nordic Lounge", type: "Lounge Chair", price: 24500, rating: 5, image: "https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&q=80&w=600", desc: "Scandinavian design meets luxury materials in this ergonomic masterpiece." },
+            { id: "SC007", name: "Silk Slipper", type: "Slipper Chair", price: 11000, rating: 4, image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&q=80&w=600", desc: "Lightweight yet sturdy, upholstered in a silk-blend fabric for a smooth, premium feel." },
+            { id: "SC008", name: "Leather Barrel", type: "Barrel Chair", price: 21000, rating: 5, image: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&q=80&w=600", desc: "Top-grain Italian leather that ages beautifully, providing a timeless look." },
+            { id: "SC009", name: "Tuscan Wing", type: "Wing Chair", price: 17500, rating: 4, image: "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=600", desc: "Inspired by Italian countryside villas, featuring earthy tones and brass nailhead trim." },
+            { id: "SC010", name: "Urban Lounge", type: "Lounge Chair", price: 13500, rating: 4, image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=600", desc: "Compact design for modern apartments without compromising on the luxury feel." },
+            { id: "SC011", name: "Gold Accent Slipper", type: "Slipper Chair", price: 14000, rating: 5, image: "https://images.unsplash.com/photo-1617331140180-e8262094733a?auto=format&fit=crop&q=80&w=600", desc: "Featuring polished gold stainless steel legs and a chic cream fabric." },
+            { id: "SC012", name: "Boucle Barrel", type: "Barrel Chair", price: 26000, rating: 5, image: "https://images.unsplash.com/photo-1634715066614-25e298f21742?auto=format&fit=crop&q=80&w=600", desc: "The trending textured boucle fabric meets our classic barrel silhouette." },
+            { id: "SC013", name: "Midnight Wing", type: "Wing Chair", price: 20500, rating: 5, image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?auto=format&fit=crop&q=80&w=600", desc: "A dark, moody aesthetic for sophisticated study rooms or home libraries." },
+            { id: "SC014", name: "Retro Lounge", type: "Lounge Chair", price: 19800, rating: 4, image: "https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&q=80&w=600", desc: "A nod to 70s luxury, reimagined with modern materials and support." },
+            { id: "SC015", name: "Minimal Slipper", type: "Slipper Chair", price: 9500, rating: 3, image: "https://images.unsplash.com/photo-1519961655809-34fa156820ff?auto=format&fit=crop&q=80&w=600", desc: "Simple lines, premium comfort. The essential accent chair for any room." },
+            { id: "SC016", name: "Velmora Signature", type: "Lounge Chair", price: 45000, rating: 5, image: "https://images.unsplash.com/photo-1567016432779-094069958ea5?auto=format&fit=crop&q=80&w=600", desc: "Our flagship lounge chair, handcrafted over 40 hours with the finest materials." }
+        ];
+
+        const container = document.getElementById('product-container');
+        const cartCountElement = document.getElementById('cart-count');
+
+        // INITIALIZE PAGE
+        function init() {
+            renderProducts();
+            updateCartCount();
+            startHeroSlider();
+        }
+
+        // RENDER PRODUCT CARDS
+        function renderProducts() {
+            container.innerHTML = products.map(product => `
+                <div class="product-card" onclick="openModal('${product.id}')">
+                    <div class="img-container">
+                        <img src="${product.image}" alt="${product.name}" loading="lazy">
+                        <div class="card-icons">
+                            <button class="icon-btn" onclick="toggleWishlist(event, '${product.id}')">
+                                <i class="fa-solid fa-heart"></i>
+                            </button>
+                            <button class="icon-btn" onclick="handleAddToCart(event, '${product.id}')">
+                                <i class="fa-solid fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-type">${product.type}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">₹${product.price.toLocaleString()}</div>
+                        <div style="color: #f1c40f; font-size: 0.8rem; margin-top: 5px;">
+                            ${Array(product.rating).fill('<i class="fa-solid fa-star"></i>').join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // MODAL LOGIC
+        const modal = document.getElementById('product-modal');
+        function openModal(id) {
+            const product = products.find(p => p.id === id);
+            document.getElementById('modal-image').src = product.image;
+            document.getElementById('modal-name').innerText = product.name;
+            document.getElementById('modal-price').innerText = `₹${product.price.toLocaleString()}`;
+            document.getElementById('modal-desc').innerText = product.desc;
+            
+            const addBtn = document.getElementById('modal-add-btn');
+            addBtn.onclick = (e) => handleAddToCart(e, id);
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = (event) => {
+            if (event.target == modal) closeModal();
+        };
+
+        // CART SYSTEM (Corrected to ensure image URL is saved)
+        function handleAddToCart(event, id) {
+            event.stopPropagation(); 
+            const product = products.find(p => p.id === id);
+            
+            // Adding to cart with explicit image property
+            addToCart({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image, // এটি নিশ্চিত করবে যে ছবির লিঙ্ক কার্টে যাচ্ছে
+                quantity: 1
+            });
+            
+            // Visual Feedback
+            const btn = event.currentTarget;
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            setTimeout(() => {
+                btn.innerHTML = originalIcon;
+            }, 1500);
+        }
+
+        function addToCart(product) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existing = cart.find(item => item.id === product.id);
+            
+            if(existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push(product);
+            }
+            
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCountElement.innerText = count;
+        }
+
+        // WISHLIST SYSTEM
+        function toggleWishlist(event, id) {
+            event.stopPropagation();
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            const index = wishlist.indexOf(id);
+            
+            if(index > -1) {
+                wishlist.splice(index, 1);
+                event.currentTarget.classList.remove('active');
+            } else {
+                wishlist.push(id);
+                event.currentTarget.classList.add('active');
+            }
+            localStorage.setItem("wishlist", JSON.stringify(wishlist));
+        }
+
+        // DARK MODE TOGGLE
+        const darkToggle = document.getElementById('dark-toggle');
+        darkToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = darkToggle.querySelector('i');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        });
+
+        // HERO SLIDER
+        function startHeroSlider() {
+            const slides = document.querySelectorAll('.slide');
+            let currentSlide = 0;
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 5000);
+        }
+
+        init();
+    </script>
+</body>
+</html>

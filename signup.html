@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Signup | Velmora</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --vel-gold: #C5A059;
+            --vel-beige: #F9F7F2;
+            --vel-wood: #2D241E;
+            --vel-glass: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #FDFCFB 0%, #F5F1E9 100%);
+            color: var(--vel-wood);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+
+        /* Premium Glass Card */
+        .auth-card {
+            background: var(--vel-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 40px 100px -20px rgba(45, 36, 30, 0.15);
+            border-radius: 3rem;
+            width: 100%;
+            max-width: 460px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Form Slider */
+        .slider-wrapper {
+            display: flex;
+            width: 200%;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .form-pane {
+            width: 50%;
+            padding: 2.5rem 3rem;
+        }
+
+        /* Luxury Inputs */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        .vel-input {
+            width: 100%;
+            padding: 1.25rem 1rem 0.6rem;
+            background: white;
+            border: 1px solid #EAEAEA;
+            border-radius: 1.2rem;
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .vel-label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            font-size: 0.85rem;
+            color: #A0A0A0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .vel-input:focus ~ .vel-label,
+        .vel-input:not(:placeholder-shown) ~ .vel-label {
+            top: 0.4rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--vel-gold);
+        }
+
+        .vel-input:focus {
+            border-color: var(--vel-gold);
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.08);
+        }
+
+        /* Gold Button */
+        .btn-premium {
+            background: linear-gradient(135deg, #C5A059 0%, #B38F4D 100%);
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(197, 160, 89, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn-premium:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Tab Interaction */
+        .tab-btn {
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            transition: all 0.3s ease;
+        }
+
+        .active-tab { color: var(--vel-gold) !important; }
+
+        .indicator {
+            position: absolute;
+            bottom: 0;
+            height: 2px;
+            background: var(--vel-gold);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-top: 0.3rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card animate__animated animate__fadeIn">
+        
+        <div id="auth-ui-header">
+            <div class="text-center pt-10 pb-6">
+                <h1 class="serif text-3xl font-black text-[#C5A059] mb-1">VELMORA</h1>
+                <p class="text-[9px] uppercase tracking-[0.4em] font-bold text-gray-400">Welcome to Velmora</p>
+            </div>
+
+            <div class="flex border-b border-gray-100 relative">
+                <button onclick="toggleForm('login')" id="tab-login" class="flex-1 py-4 tab-btn active-tab">Login</button>
+                <button onclick="toggleForm('signup')" id="tab-signup" class="flex-1 py-4 tab-btn text-gray-300">Signup</button>
+                <div id="tab-ind" class="indicator w-1/2 left-0"></div>
+            </div>
+        </div>
+
+        <div id="auth-slider" class="slider-wrapper">
+            
+            <div class="form-pane">
+                <h3 class="serif text-2xl font-bold mb-8">Sign In</h3>
+                <form id="login-form">
+                    <div class="input-group">
+                        <input type="email" id="l-email" class="vel-input" placeholder=" " required>
+                        <label class="vel-label">Email Address</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="l-pass" class="vel-input" placeholder=" " required>
+                        <label class="vel-label">Password</label>
+                        <button type="button" onclick="togglePass('l-pass', this)" class="absolute right-4 top-4 text-gray-300">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="w-full btn-premium py-5 rounded-2xl flex items-center justify-center gap-3 mt-6">
+                        <span class="text-[10px] font-black uppercase tracking-[0.2em]">Enter Atelier</span>
+                        <div class="spinner"></div>
+                    </button>
+                </form>
+            </div>
+
+            <div class="form-pane">
+                <h3 class="serif text-2xl font-bold mb-8">Join the Family</h3>
+                <form id="signup-form">
+                    <div class="input-group">
+                        <input type="text" id="s-name" class="vel-input" placeholder=" " required>
+                        <label class="vel-label">Full Name</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="s-email" class="vel-input" placeholder=" " required>
+                        <label class="vel-label">Email Address</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="s-pass" class="vel-input" placeholder=" " required>
+                        <label class="vel-label">Password</label>
+                        <p id="s-pass-err" class="error-msg">Minimum 6 characters.</p>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="s-conf" class="vel-input" placeholder=" " required>
+                        <label class="vel-label">Confirm Password</label>
+                        <p id="s-conf-err" class="error-msg">Passwords do not match.</p>
+                    </div>
+                    <button type="submit" class="w-full btn-premium py-5 rounded-2xl flex items-center justify-center gap-3 mt-4">
+                        <span class="text-[10px] font-black uppercase tracking-[0.2em]">Create Account</span>
+                        <div class="spinner"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="dashboard" class="hidden p-12 text-center animate__animated animate__zoomIn">
+            <div class="w-20 h-20 bg-beige-50 border-2 border-[#C5A059] rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="user" class="text-[#C5A059] w-10 h-10"></i>
+            </div>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Welcome Back</p>
+            <h2 id="username" class="serif text-3xl font-bold italic mb-1 text-[#2D241E]"></h2>
+            <p id="useremail" class="text-xs text-gray-400 tracking-wider mb-10"></p>
+            
+            <button id="logout-btn" class="w-full border border-gray-100 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 hover:bg-red-50 transition">Revoke Access</button>
+        </div>
+
+        <div id="toast" class="absolute bottom-4 left-6 right-6 py-3 bg-black text-white text-[9px] font-bold uppercase tracking-widest text-center rounded-xl hidden animate__animated animate__slideInUp"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
+        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, setDoc, doc, getDoc } 
+        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAVloisEDD14Q_9aOi6O05l6N81sf-SgHo",
+            authDomain: "utilext.firebaseapp.com",
+            projectId: "utilext",
+            storageBucket: "utilext.firebasestorage.app",
+            messagingSenderId: "998525703871",
+            appId: "1:998525703871:web:3d5d37fb0322fafb67580a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- AUTO DATA LOAD (Persistent Session) ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in - Fetch Data
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById("username").innerText = data.name;
+                    document.getElementById("useremail").innerText = data.email;
+                    
+                    // Toggle Views
+                    document.getElementById('auth-ui-header').classList.add('hidden');
+                    document.getElementById('auth-slider').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                }
+            } else {
+                // No user - Show Auth
+                document.getElementById('auth-ui-header').classList.remove('hidden');
+                document.getElementById('auth-slider').classList.remove('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
+            }
+        });
+
+        // --- SIGNUP LOGIC ---
+        document.getElementById('signup-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('s-name').value;
+            const email = document.getElementById('s-email').value;
+            const pass = document.getElementById('s-pass').value;
+            const conf = document.getElementById('s-conf').value;
+            const btn = e.target.querySelector('button');
+
+            // Validation
+            let valid = true;
+            if(pass.length < 6) { document.getElementById('s-pass-err').style.display='block'; valid=false; }
+            if(pass !== conf) { document.getElementById('s-conf-err').style.display='block'; valid=false; }
+            if(!valid) return;
+
+            setLoading(btn, true);
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = cred.user;
+
+                // Save to Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    createdAt: new Date()
+                });
+
+                showToast("Account Crafted Successfully");
+            } catch (err) {
+                showToast(err.code);
+            } finally {
+                setLoading(btn, false);
+            }
+        };
+
+        // --- LOGIN LOGIC ---
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('l-email').value;
+            const pass = document.getElementById('l-pass').value;
+            const btn = e.target.querySelector('button');
+
+            setLoading(btn, true);
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                showToast("Welcome Back to Velmora");
+            } catch (err) {
+                showToast("Invalid Credentials");
+            } finally {
+                setLoading(btn, false);
+            }
+        };
+
+        // --- LOGOUT LOGIC ---
+        document.getElementById('logout-btn').onclick = () => signOut(auth);
+
+        // --- UI HELPERS ---
+        function setLoading(btn, active) {
+            const span = btn.querySelector('span');
+            const spinner = btn.querySelector('.spinner');
+            btn.disabled = active;
+            span.style.display = active ? 'none' : 'block';
+            spinner.style.display = active ? 'block' : 'none';
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg.replace('auth/', '').replace(/-/g, ' ');
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 3000);
+        }
+    </script>
+
+    <script>
+        // Tab Toggling
+        function toggleForm(type) {
+            const slider = document.getElementById('auth-slider');
+            const ind = document.getElementById('tab-ind');
+            const tL = document.getElementById('tab-login');
+            const tS = document.getElementById('tab-signup');
+
+            if(type === 'login') {
+                slider.style.transform = 'translateX(0)';
+                ind.style.left = '0';
+                tL.classList.add('active-tab');
+                tL.classList.remove('text-gray-300');
+                tS.classList.add('text-gray-300');
+                tS.classList.remove('active-tab');
+            } else {
+                slider.style.transform = 'translateX(-50%)';
+                ind.style.left = '50%';
+                tS.classList.add('active-tab');
+                tS.classList.remove('text-gray-300');
+                tL.classList.add('text-gray-300');
+                tL.classList.remove('active-tab');
+            }
+        }
+
+        // Pass Visibility
+        function togglePass(id, btn) {
+            const input = document.getElementById(id);
+            const icon = btn.querySelector('i');
+            input.type = input.type === 'password' ? 'text' : 'password';
+            icon.setAttribute('data-lucide', input.type === 'password' ? 'eye' : 'eye-off');
+            lucide.createIcons();
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
